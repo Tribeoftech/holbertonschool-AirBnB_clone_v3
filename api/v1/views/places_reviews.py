@@ -8,6 +8,7 @@ from models.review import Review
 from models.place import Place
 from models.user import User
 
+
 # Route to get all reviews of a specific place based on place_id
 @app_views.route(
     "/places/<place_id>/reviews", methods=['GET'], strict_slashes=False)
@@ -22,6 +23,7 @@ def reviews(place_id):
             review_list.append(review.to_dict())
         return jsonify(review_list)
 
+
 # Route to get a single review based on review_id
 @app_views.route("/reviews/<review_id>", methods=['GET'], strict_slashes=False)
 def get_review(review_id):
@@ -31,6 +33,7 @@ def get_review(review_id):
         abort(404)
     else:
         return jsonify(review.to_dict())
+
 
 # Route to delete a single review based on review_id
 @app_views.route(
@@ -44,6 +47,7 @@ def del_review(review_id):
         storage.delete(review)
         storage.save()
         return jsonify({}), 200
+
 
 # Route to create a new review under a specific place based on place_id
 @app_views.route(
@@ -67,6 +71,7 @@ def post_review(place_id):
     new_review = Review(**review)
     new_review.save()
     return jsonify(new_review.to_dict()), 201
+
 
 # Route to update a single review based on review_id
 @app_views.route(

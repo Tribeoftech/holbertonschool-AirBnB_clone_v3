@@ -8,6 +8,7 @@ from models.city import City
 from models.place import Place
 from models.user import User
 
+
 # Route to get all places of a specific city based on city_id
 @app_views.route("/cities/<city_id>/places", methods=["GET"],
                  strict_slashes=False)
@@ -20,6 +21,7 @@ def get_places(city_id):
     places_list = [place.to_dict() for place in places]
     return jsonify(places_list)
 
+
 # Route to get a single place based on place_id
 @app_views.route("/places/<place_id>", methods=["GET"], strict_slashes=False)
 def get_place(place_id):
@@ -28,6 +30,7 @@ def get_place(place_id):
     if place is None:
         abort(404)
     return jsonify(place.to_dict())
+
 
 # Route to delete a single place based on place_id
 @app_views.route("/places/<place_id>", methods=["DELETE"],
@@ -40,6 +43,7 @@ def delete_place(place_id):
     storage.delete(place)
     storage.save()
     return jsonify({}), 200
+
 
 # Route to create a new place under a specific city based on city_id
 @app_views.route("/cities/<city_id>/places", methods=["POST"],
@@ -66,6 +70,7 @@ def create_place(city_id):
     storage.new(place)
     storage.save()
     return jsonify(place.to_dict()), 201
+
 
 # Route to update a single place based on place_id
 @app_views.route("/places/<place_id>", methods=["PUT"], strict_slashes=False)

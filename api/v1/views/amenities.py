@@ -6,12 +6,14 @@ from flask import jsonify, request, abort, make_response
 from models import storage
 from models.amenity import Amenity
 
+
 # Route to retrieve all amenities
 @app_views.route('/amenities', methods=['GET'], strict_slashes=False)
 def get_amenities():
     """Retrieves all amenities"""
     amenities = storage.all(Amenity)
     return jsonify([amenity.to_dict() for amenity in amenities.values()])
+
 
 # Route to create a new amenity
 @app_views.route('/amenities', methods=['POST'], strict_slashes=False)
@@ -27,6 +29,7 @@ def create_amenity():
     storage.save()
     return make_response(jsonify(new_amenity.to_dict()), 201)
 
+
 # Route to get a single amenity by its ID
 @app_views.route('/amenities/<amenity_id>', methods=['GET'],
                  strict_slashes=False)
@@ -36,6 +39,7 @@ def get_amenity(amenity_id):
     if amenity is None:
         abort(404)
     return jsonify(amenity.to_dict())
+
 
 # Route to delete a single amenity by its ID
 @app_views.route('/amenities/<amenity_id>', methods=['DELETE'],
@@ -48,6 +52,7 @@ def delete_amenity(amenity_id):
     storage.delete(amenity)
     storage.save()
     return make_response(jsonify({}), 200)
+
 
 # Route to update a single amenity by its ID
 @app_views.route('/amenities/<amenity_id>', methods=['PUT'],

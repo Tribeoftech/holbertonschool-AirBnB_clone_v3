@@ -16,6 +16,7 @@ Routes:
 - DELETE /states/<state_id>: deletes a State object by ID
 """
 
+
 # Route to get all states
 @app_views.route("/states", methods=['GET'], strict_slashes=False)
 def states():
@@ -25,6 +26,7 @@ def states():
     for state in states.values():
         list_states.append(state.to_dict())
     return jsonify(list_states)
+
 
 # Route to get a single state by ID
 @app_views.route("/states/<state_id>", methods=['GET'], strict_slashes=False)
@@ -36,8 +38,10 @@ def state(state_id):
     else:
         return jsonify(state.to_dict())
 
+
 # Route to delete a single state by ID
-@app_views.route("/states/<state_id>", methods=['DELETE'], strict_slashes=False)
+@app_views.route(
+    "/states/<state_id>", methods=['DELETE'], strict_slashes=False)
 def del_state(state_id):
     """method deletes a State object"""
     state = storage.get(State, state_id)
@@ -47,6 +51,7 @@ def del_state(state_id):
         storage.delete(state)
         storage.save()
         return jsonify({}), 200
+
 
 # Route to create a new state
 @app_views.route("/states", methods=['POST'], strict_slashes=False)
@@ -60,6 +65,7 @@ def post_state():
         new_state = State(**request.get_json())
         new_state.save()
         return jsonify(new_state.to_dict()), 201
+
 
 # Route to update an existing state by ID
 @app_views.route("/states/<state_id>", methods=['PUT'], strict_slashes=False)
