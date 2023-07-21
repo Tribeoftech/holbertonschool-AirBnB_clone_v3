@@ -9,6 +9,7 @@ from flask import abort, jsonify, request
 @app_views.route('/users', methods=['GET'], strict_slashes=False)
 def get_users():
     """ Retrieves all users or specific user """
+    # Retrieve all users and convert them to dictionaries
     list_users = [user.to_dict() for user in storage.all(User).values()]
     return jsonify(list_users)
 
@@ -27,9 +28,7 @@ def get_user(user_id):
                  strict_slashes=False)
 def delete_user(user_id):
     """ Deletes a user """
-
     user = storage.get(User, user_id)
-
     if user is None:
         abort(404)
 
@@ -46,6 +45,7 @@ def post_user():
     if not data:
         abort(400, description="Not a JSON")
 
+    # Check if 'email' and 'password' keys are present in the JSON data
     if 'email' not in request.get_json():
         abort(400, description="Missing email")
     if 'password' not in request.get_json():
@@ -67,6 +67,7 @@ def put_user(user_id):
     if not data:
         abort(400, description="Not a JSON")
 
+    # List of attributes to ignore during update
     ignore = ['id', 'email', 'created_at', 'updated_at']
     for key, value in data.items():
         if key not in ignore:

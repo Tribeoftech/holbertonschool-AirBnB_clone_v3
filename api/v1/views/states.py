@@ -4,6 +4,7 @@ from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
 from models.state import State
+
 """
 This module defines the routes for interacting with State objects in the API.
 
@@ -15,7 +16,7 @@ Routes:
 - DELETE /states/<state_id>: deletes a State object by ID
 """
 
-
+# Route to get all states
 @app_views.route("/states", methods=['GET'], strict_slashes=False)
 def states():
     """method retrieves list of all State objects in JSON format"""
@@ -25,7 +26,7 @@ def states():
         list_states.append(state.to_dict())
     return jsonify(list_states)
 
-
+# Route to get a single state by ID
 @app_views.route("/states/<state_id>", methods=['GET'], strict_slashes=False)
 def state(state_id):
     """method retrieves a State object in JSON format"""
@@ -35,9 +36,8 @@ def state(state_id):
     else:
         return jsonify(state.to_dict())
 
-
-@app_views.route(
-    "/states/<state_id>", methods=['DELETE'], strict_slashes=False)
+# Route to delete a single state by ID
+@app_views.route("/states/<state_id>", methods=['DELETE'], strict_slashes=False)
 def del_state(state_id):
     """method deletes a State object"""
     state = storage.get(State, state_id)
@@ -48,7 +48,7 @@ def del_state(state_id):
         storage.save()
         return jsonify({}), 200
 
-
+# Route to create a new state
 @app_views.route("/states", methods=['POST'], strict_slashes=False)
 def post_state():
     """method creates a new State object"""
@@ -61,7 +61,7 @@ def post_state():
         new_state.save()
         return jsonify(new_state.to_dict()), 201
 
-
+# Route to update an existing state by ID
 @app_views.route("/states/<state_id>", methods=['PUT'], strict_slashes=False)
 def update_state(state_id):
     """method updates an existing State object"""
