@@ -17,12 +17,14 @@ CORS(app, origins="0.0.0.0")
 # Register the app_views blueprint, which contains the API routes
 app.register_blueprint(app_views)
 
+
 # Define a teardown_appcontext decorator to close the database
 # session after each request
 @app.teardown_appcontext
 def teardown_appcontext(self):
     """Exits storage by calling close"""
     storage.close()
+
 
 # Define an errorhandler for 404 errors to handle resource not found
 @app.errorhandler(404)
@@ -35,6 +37,6 @@ if __name__ == "__main__":
     # Get the host and port from environment variables, or use default values
     hosts = getenv('HBNB_API_HOST', default='0.0.0.0')
     ports = getenv('HBNB_API_PORT', default=5000)
-    
+
     # Run the Flask app on the specified host and port, with threading enabled
     app.run(host=hosts, port=ports, threaded=True)
