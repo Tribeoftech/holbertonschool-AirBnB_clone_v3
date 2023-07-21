@@ -10,13 +10,15 @@ from flask_cors import CORS
 # Create a Flask app instance
 app = Flask(__name__)
 
-# Enable Cross-Origin Resource Sharing (CORS) to allow requests from any origin
+# Enable Cross-Origin Resource Sharing (CORS)
+# to allow requests from any origin
 CORS(app, origins="0.0.0.0")
 
 # Register the app_views blueprint, which contains the API routes
 app.register_blueprint(app_views)
 
-# Define a teardown_appcontext decorator to close the database session after each request
+# Define a teardown_appcontext decorator to close the database
+# session after each request
 @app.teardown_appcontext
 def teardown_appcontext(self):
     """Exits storage by calling close"""
