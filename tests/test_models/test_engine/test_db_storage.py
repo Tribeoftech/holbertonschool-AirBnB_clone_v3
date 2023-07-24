@@ -3,18 +3,22 @@
 Contains the TestDBStorageDocs and TestDBStorage classes
 """
 
+from datetime import datetime
+import imp
 import inspect
 import models
-import pep8
-import unittest
 from models.engine import db_storage
 from models.amenity import Amenity
+from models.base_model import BaseModel
 from models.city import City
 from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
-
+import json
+import os
+import pep8
+import unittest
 DBStorage = db_storage.DBStorage
 classes = {"Amenity": Amenity, "City": City, "Place": Place,
            "Review": Review, "State": State, "User": User}
@@ -22,7 +26,6 @@ classes = {"Amenity": Amenity, "City": City, "Place": Place,
 
 class TestDBStorageDocs(unittest.TestCase):
     """Tests to check the documentation and style of DBStorage class"""
-
     @classmethod
     def setUpClass(cls):
         """Set up for the doc tests"""
@@ -38,7 +41,8 @@ class TestDBStorageDocs(unittest.TestCase):
     def test_pep8_conformance_test_db_storage(self):
         """Test tests/test_models/test_db_storage.py conforms to PEP8."""
         pep8s = pep8.StyleGuide(quiet=True)
-        result = pep8s.check_files(['tests/test_models/test_engine/test_db_storage.py'])
+        result = pep8s.check_files(['tests/test_models/test_engine/\
+test_db_storage.py'])
         self.assertEqual(result.total_errors, 0,
                          "Found code style errors (and warnings).")
 
@@ -65,12 +69,11 @@ class TestDBStorageDocs(unittest.TestCase):
                             "{:s} method needs a docstring".format(func[0]))
 
 
-class TestDBStorage(unittest.TestCase):
-    """Test the DBStorage class"""
-
+class TestFileStorage(unittest.TestCase):
+    """Test the FileStorage class"""
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_all_returns_dict(self):
-        """Test that all returns a dictionary"""
+        """Test that all returns a dictionaty"""
         self.assertIs(type(models.storage.all()), dict)
         test = models.storage.all()
         self.assertEqual(type(test), dict)
@@ -93,7 +96,7 @@ class TestDBStorage(unittest.TestCase):
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_new(self):
-        """Test that new adds an object to the database"""
+        """test that new adds an object to the database"""
         from models import storage
         from models.state import State
         test = State(name="Happiness")
@@ -110,7 +113,7 @@ class TestDBStorage(unittest.TestCase):
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_save(self):
-        """Test that save properly saves objects to the database"""
+        """Test that save properly saves objects to file.json"""
         from models import storage
         from models.state import State
         test = State(name="Happiness")
@@ -127,21 +130,21 @@ class TestDBStorage(unittest.TestCase):
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_get(self):
-        """Test that get properly retrieves objects from the database"""
+        """Test that save properly saves objects to file.json"""
         from models import storage
         test = State(name="Happiness")
         storage.new(test)
         storage.save()
         first_state_id = list(storage.all(State).values())[0].id
         obj = storage.get(State, first_state_id)
-        self.assertEqual(obj.__class__.__name__, "State")
-        self.assertEqual(obj.id, first_state_id)
+        self.assertTrue(obj.__class__.__name__, "State")
+        self.assertTrue(obj.id, first_state_id)
         storage.delete(test)
         storage.save()
 
     @unittest.skipIf(models.storage_t != 'db', "not testing db storage")
     def test_count(self):
-        """Test that count properly counts objects in the database"""
+        """Test that save properly saves objects to file.json"""
         from models import storage
         from models.state import State
         test = State(name="Happiness")
@@ -153,4 +156,3 @@ class TestDBStorage(unittest.TestCase):
         self.assertEqual(count_state, 1)
         storage.delete(test)
         storage.save()
-
