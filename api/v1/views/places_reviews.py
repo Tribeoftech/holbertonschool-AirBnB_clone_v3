@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""View for review objects: handles default RESTFul API actions"""
+"""View for review objects: handles default RESTful API actions"""
 
 from api.v1.views import app_views
 from flask import jsonify, request, abort, make_response
@@ -9,10 +9,11 @@ from models.place import Place
 from models.user import User
 
 
+# Route to get all reviews of a specific place based on place_id
 @app_views.route(
     "/places/<place_id>/reviews", methods=['GET'], strict_slashes=False)
 def reviews(place_id):
-    """method retrieves list of all Review objects in a given Place"""
+    """Method retrieves list of all Review objects in a given Place"""
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
@@ -23,9 +24,10 @@ def reviews(place_id):
         return jsonify(review_list)
 
 
+# Route to get a single review based on review_id
 @app_views.route("/reviews/<review_id>", methods=['GET'], strict_slashes=False)
 def get_review(review_id):
-    """method retrieves a Review object in JSON format"""
+    """Method retrieves a Review object in JSON format"""
     review = storage.get(Review, review_id)
     if review is None:
         abort(404)
@@ -33,10 +35,11 @@ def get_review(review_id):
         return jsonify(review.to_dict())
 
 
+# Route to delete a single review based on review_id
 @app_views.route(
     "/reviews/<review_id>", methods=['DELETE'], strict_slashes=False)
 def del_review(review_id):
-    """method deletes a Review object"""
+    """Method deletes a Review object"""
     review = storage.get(Review, review_id)
     if review is None:
         abort(404)
@@ -46,10 +49,11 @@ def del_review(review_id):
         return jsonify({}), 200
 
 
+# Route to create a new review under a specific place based on place_id
 @app_views.route(
     "/places/<place_id>/reviews", methods=['POST'], strict_slashes=False)
 def post_review(place_id):
-    """method creates a new Review object"""
+    """Method creates a new Review object"""
     place = storage.get(Place, place_id)
     if place is None:
         abort(404)
@@ -69,15 +73,18 @@ def post_review(place_id):
     return jsonify(new_review.to_dict()), 201
 
 
-@app_views.route("/reviews/<review_id>", methods=['PUT'], strict_slashes=False)
+# Route to update a single review based on review_id
+@app_views.route(
+    "/reviews/<review_id>", methods=['PUT'], strict_slashes=False)
 def update_review(review_id):
-    """method updates an existing Review object"""
+    """Method updates an existing Review object"""
     review = storage.get(Review, review_id)
     if review is None:
         abort(404)
     elif not request.json or not request.is_json:
         abort(400, 'Not a JSON')
     else:
+        # List of attributes to ignore for updating (immutable attributes)
         ignore = ['id', 'user_id', 'place_id', 'created_at', 'updated_at']
         for key, value in request.get_json().items():
             if key not in ignore:
