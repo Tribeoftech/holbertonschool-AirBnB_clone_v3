@@ -7,6 +7,7 @@ from datetime import datetime
 import imp
 import inspect
 import models
+from models.engine.file_storage import file_storage
 from models.engine import db_storage
 from models.amenity import Amenity
 from models.base_model import BaseModel
